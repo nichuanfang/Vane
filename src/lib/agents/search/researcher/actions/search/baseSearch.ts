@@ -34,10 +34,10 @@ export const executeSearch = async (input: {
     },
   ]);
 
-  // 最大返回条目数，默认20
-  const MAX_RESULTS = 20;
-  // 最大内容长度，默认1000字符
-  const MAX_CONTENT_LENGTH = 1000;
+  // 最大返回条目数，默认5
+  const MAX_RESULTS = 5;
+  // 最大内容长度，默认500字符
+  const MAX_CONTENT_LENGTH = 500;
 
   if (input.mode === 'speed' || input.mode === 'balanced') {
     const searchResultsBlockId = crypto.randomUUID();
