@@ -34,6 +34,11 @@ export const executeSearch = async (input: {
     },
   ]);
 
+  // 最大返回条目数，默认20
+  const MAX_RESULTS = 20;
+  // 最大内容长度，默认1000字符
+  const MAX_CONTENT_LENGTH = 1000;
+
   if (input.mode === 'speed' || input.mode === 'balanced') {
     const searchResultsBlockId = crypto.randomUUID();
     let searchResultsEmitted = false;
@@ -52,8 +57,9 @@ export const executeSearch = async (input: {
 
         resultChunks = (
           await Promise.all(
-            res.results.map(async (r) => {
-              const content = r.content || r.title;
+            res.results.slice(0, MAX_RESULTS).map(async (r) => {
+              // 截断内容，节省token
+              const content = (r.content || r.title).slice(0, MAX_CONTENT_LENGTH);
               const chunkEmbedding = (
                 await input.embedding.embedText([content])
               )[0];
@@ -71,8 +77,8 @@ export const executeSearch = async (input: {
           )
         ).filter((c) => c.metadata.similarity > 0.5);
       } catch (err) {
-        resultChunks = res.results.map((r) => {
-          const content = r.content || r.title;
+        resultChunks = res.results.slice(0, MAX_RESULTS).map((r) => {
+          const content = (r.content || r.title).slice(0, MAX_CONTENT_LENGTH);
 
           return {
             content,
@@ -166,7 +172,7 @@ export const executeSearch = async (input: {
 
         return uniqueResult;
       })
-      .slice(0, 20);
+      .slice(0, MAX_RESULTS);
 
     return uniqueSearchResults;
   } else if (input.mode === 'quality') {
@@ -182,8 +188,8 @@ export const executeSearch = async (input: {
 
       let resultChunks: Chunk[] = [];
 
-      resultChunks = res.results.map((r) => {
-        const content = r.content || r.title;
+      resultChunks = res.results.slice(0, MAX_RESULTS).map((r) => {
+        const content = (r.content || r.title).slice(0, MAX_CONTENT_LENGTH);
 
         return {
           content,
