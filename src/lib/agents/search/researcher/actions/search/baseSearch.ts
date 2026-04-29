@@ -34,9 +34,9 @@ export const executeSearch = async (input: {
     },
   ]);
 
-  // 最大返回条目数，默认10
+  // 最大返回条目数10
   const MAX_RESULTS = 10;
-  // 最大内容长度，默认1000字符
+  // 最大内容长度1000字符
   const MAX_CONTENT_LENGTH = 1000;
 
   if (input.mode === 'speed' || input.mode === 'balanced') {
